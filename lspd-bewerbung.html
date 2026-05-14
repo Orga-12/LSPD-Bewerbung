@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LSPD – Bewerbung Chief of Police | Elito Kasalla</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c8a84b;
+    --dark-gold: #8a6f2e;
+    --navy: #0a0e1a;
+    --deep-blue: #0d1530;
+    --mid-blue: #1a2545;
+    --accent-blue: #1e3a6e;
+    --light-blue: #2a4f9e;
+    --white: #f0f4ff;
+    --silver: #a8b4cc;
+    --red: #8b1a1a;
+    --bg: #07090f;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Rajdhani', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ── INTRO SCREEN ── */
+  #intro {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+  }
+  #intro.hidden { opacity: 0; visibility: hidden; }
+
+  .intro-scanlines {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.25) 2px, rgba(0,0,0,0.25) 4px);
+    pointer-events: none;
+    animation: scanmove 8s linear infinite;
+  }
+  @keyframes scanmove { from{background-position:0 0} to{background-position:0 100px} }
+
+  .intro-bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(200,168,75,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(200,168,75,0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridfade 3s ease forwards;
+  }
+  @keyframes gridfade { from{opacity:0} to{opacity:1} }
+
+  .intro-corner {
+    position: absolute;
+    width: 80px; height: 80px;
+    border-color: var(--gold);
+    border-style: solid;
+    opacity: 0;
+    animation: cornerAppear 0.5s ease 0.5s forwards;
+  }
+  .intro-corner.tl { top:30px; left:30px; border-width:2px 0 0 2px; }
+  .intro-corner.tr { top:30px; right:30px; border-width:2px 2px 0 0; }
+  .intro-corner.bl { bottom:30px; left:30px; border-width:0 0 2px 2px; }
+  .intro-corner.br { bottom:30px; right:30px; border-width:0 2px 2px 0; }
+  @keyframes cornerAppear { to{opacity:1} }
+
+  .intro-ring {
+    position: relative;
+    width: 220px; height: 220px;
+    margin-bottom: 40px;
+  }
+  .intro-ring::before, .intro-ring::after {
+    content:'';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px solid transparent;
+  }
+  .intro-ring::before {
+    border-top-color: var(--gold);
+    border-right-color: var(--gold);
+    animation: spin1 2s linear infinite;
+  }
+  .intro-ring::after {
+    border-bottom-color: rgba(200,168,75,0.4);
+    border-left-color: rgba(200,168,75,0.4);
+    animation: spin2 3s linear infinite;
+    inset: 10px;
+  }
+  @keyframes spin1 { to{transform:rotate(360deg)} }
+  @keyframes spin2 { to{transform:rotate(-360deg)} }
+
+  .intro-logo-wrap {
+    position: absolute;
+    inset: 20px;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    animation: logoAppear 0.8s ease 0.8s forwards;
+  }
+  @keyframes logoAppear { to{opacity:1} }
+  .intro-logo-wrap img { width:100%; height:100%; object-fit:contain; filter: drop-shadow(0 0 20px rgba(200,168,75,0.6)); }
+
+  .intro-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(22px, 5vw, 42px);
+    font-weight: 900;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-shadow: 0 0 30px rgba(200,168,75,0.5), 0 0 60px rgba(200,168,75,0.2);
+    opacity: 0;
+    animation: titleSlide 0.8s ease 1.2s forwards;
+  }
+  @keyframes titleSlide { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+  .intro-sub {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    letter-spacing: 4px;
+    color: var(--silver);
+    margin-top: 8px;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: titleSlide 0.8s ease 1.6s forwards;
+  }
+
+  .intro-bar {
+    width: 300px; height: 2px;
+    background: rgba(200,168,75,0.15);
+    margin: 30px auto 0;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    animation: barAppear 0.5s ease 2s forwards;
+  }
+  @keyframes barAppear { to{opacity:1} }
+  .intro-bar::after {
+    content:'';
+    position: absolute;
+    left: 0; top:0;
+    height: 100%; width: 0;
+    background: var(--gold);
+    animation: barFill 2s ease 2.1s forwards;
+    box-shadow: 0 0 10px var(--gold);
+  }
+  @keyframes barFill { to{width:100%} }
+
+  .intro-loading-text {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: rgba(200,168,75,0.6);
+    margin-top: 12px;
+    opacity: 0;
+    animation: barAppear 0.5s ease 2.2s forwards;
+  }
+
+  .intro-enter-btn {
+    margin-top: 40px;
+    padding: 14px 50px;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    animation: barAppear 0.8s ease 4.2s forwards;
+    transition: color 0.3s;
+  }
+  .intro-enter-btn::before {
+    content:'';
+    position: absolute;
+    inset: 0;
+    background: var(--gold);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: -1;
+  }
+  .intro-enter-btn:hover { color: var(--bg); }
+  .intro-enter-btn:hover::before { transform: translateX(0); }
+
+  /* ── MAIN SITE ── */
+  #main-site { opacity: 0; transition: opacity 1s ease; }
+  #main-site.visible { opacity: 1; }
+
+  /* ── HEADER ── */
+  header {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% 0%, #1a2545 0%, #07090f 70%);
+  }
+
+  .header-bg-lines {
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(200,168,75,0.04) 60px),
+      repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(200,168,75,0.04) 60px);
+    pointer-events: none;
+  }
+
+  .header-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(30,58,110,0.5) 0%, transparent 70%);
+    top: -100px; left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .header-badge {
+    position: relative;
+    z-index: 2;
+    width: 180px; height: 180px;
+    animation: floatBadge 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 30px rgba(200,168,75,0.4));
+    margin-bottom: 32px;
+  }
+  @keyframes floatBadge {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  .header-badge img { width:100%; height:100%; object-fit:contain; }
+
+  .header-eyebrow {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+    letter-spacing: 6px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    position: relative; z-index:2;
+    opacity: 0; animation: fadeUp 0.8s ease 0.3s forwards;
+  }
+
+  h1.site-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(50px, 10vw, 110px);
+    line-height: 0.95;
+    text-align: center;
+    color: var(--white);
+    letter-spacing: 4px;
+    position: relative; z-index:2;
+    opacity: 0; animation: fadeUp 0.8s ease 0.5s forwards;
+  }
+  h1.site-title span { color: var(--gold); }
+
+  .header-divider {
+    display: flex; align-items: center; gap: 16px;
+    margin: 24px 0;
+    position: relative; z-index:2;
+    opacity: 0; animation: fadeUp 0.8s ease 0.7s forwards;
+  }
+  .header-divider::before, .header-divider::after {
+    content:'';
+    width: 100px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold));
+  }
+  .header-divider::after { background: linear-gradient(90deg, var(--gold), transparent); }
+  .header-divider .star { color: var(--gold); font-size: 18px; }
+
+  .header-quote {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(16px, 3vw, 22px);
+    font-style: italic;
+    color: var(--silver);
+    text-align: center;
+    max-width: 600px;
+    position: relative; z-index:2;
+    opacity: 0; animation: fadeUp 0.8s ease 0.9s forwards;
+  }
+
+  .header-meta {
+    margin-top: 40px;
+    display: flex; gap: 40px;
+    position: relative; z-index:2;
+    opacity: 0; animation: fadeUp 0.8s ease 1.1s forwards;
+  }
+  .meta-pill {
+    background: rgba(200,168,75,0.08);
+    border: 1px solid rgba(200,168,75,0.3);
+    padding: 10px 24px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  .scroll-indicator {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: rgba(200,168,75,0.5);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    animation: scrollBounce 2s ease-in-out infinite;
+  }
+  @keyframes scrollBounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(8px)} }
+  .scroll-arrow { font-size: 20px; }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ── SECTIONS ── */
+  section { padding: 100px 20px; max-width: 1100px; margin: 0 auto; }
+
+  .section-label {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    letter-spacing: 5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    opacity: 0.7;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(40px, 6vw, 70px);
+    letter-spacing: 3px;
+    color: var(--white);
+    margin-bottom: 50px;
+    position: relative;
+  }
+  .section-title::after {
+    content:'';
+    display: block;
+    width: 80px; height: 3px;
+    background: var(--gold);
+    margin-top: 12px;
+    box-shadow: 0 0 10px var(--gold);
+  }
+
+  /* ── INFOS ── */
+  .info-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+
+  .info-photo {
+    width: 160px; height: 160px;
+    border: 2px solid var(--gold);
+    object-fit: cover;
+    filter: grayscale(20%) contrast(1.1);
+    position: relative;
+  }
+
+  .info-photo-wrap {
+    position: relative;
+  }
+  .info-photo-wrap::before {
+    content:'';
+    position: absolute;
+    inset: -8px;
+    border: 1px solid rgba(200,168,75,0.3);
+    pointer-events: none;
+  }
+
+  .info-table { width: 100%; }
+  .info-row {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    border-bottom: 1px solid rgba(200,168,75,0.1);
+    padding: 10px 0;
+  }
+  .info-key {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+  .info-val {
+    font-size: 16px;
+    color: var(--silver);
+    font-weight: 500;
+  }
+
+  .italic-quote {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(18px, 3vw, 26px);
+    font-style: italic;
+    color: var(--gold);
+    text-align: center;
+    padding: 60px 20px;
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .italic-quote::before, .italic-quote::after {
+    content: '"';
+    font-family: 'Georgia', serif;
+    font-size: 80px;
+    color: rgba(200,168,75,0.15);
+    position: absolute;
+    line-height: 1;
+  }
+  .italic-quote::before { top: 10px; left: 0; }
+  .italic-quote::after { bottom: -10px; right: 0; content:'"'; }
+
+  /* ── MOTIVATION ── */
+  .text-block {
+    background: linear-gradient(135deg, rgba(26,37,69,0.6) 0%, rgba(13,21,48,0.8) 100%);
+    border: 1px solid rgba(200,168,75,0.2);
+    padding: 36px 40px;
+    font-size: 17px;
+    line-height: 1.8;
+    color: var(--silver);
+    position: relative;
+    margin-bottom: 20px;
+  }
+  .text-block::before {
+    content:'';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--gold);
+    box-shadow: 0 0 10px var(--gold);
+  }
+
+  /* ── DEPARTMENTS ── */
+  .dept-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+  }
+
+  .dept-card {
+    background: linear-gradient(135deg, rgba(26,37,69,0.5), rgba(7,9,15,0.9));
+    border: 1px solid rgba(200,168,75,0.2);
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+    cursor: default;
+  }
+  .dept-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-4px);
+  }
+  .dept-card::after {
+    content:'';
+    position: absolute;
+    top: 0; right: 0;
+    width: 0; height: 0;
+    border-style: solid;
+    border-width: 0 32px 32px 0;
+    border-color: transparent var(--gold) transparent transparent;
+    opacity: 0.4;
+  }
+  .dept-card-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    font-weight: 700;
+  }
+  .dept-card-body { font-size: 15px; line-height: 1.7; color: var(--silver); }
+
+  .dept-card.full { grid-column: 1 / -1; }
+
+  /* ── ERFAHRUNG ── */
+  .exp-block {
+    background: rgba(10,14,26,0.8);
+    border: 1px solid rgba(200,168,75,0.15);
+    padding: 36px 40px;
+    margin-bottom: 24px;
+  }
+  .exp-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(200,168,75,0.2);
+  }
+  .exp-list { list-style: none; }
+  .exp-list li {
+    padding: 8px 0;
+    font-size: 16px;
+    color: var(--silver);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: flex; align-items: baseline; gap: 12px;
+  }
+  .exp-list li::before { content:'▸'; color: var(--gold); flex-shrink: 0; }
+  .exp-list li strong { color: var(--white); font-weight: 600; }
+
+  /* ── RÄNGE ── */
+  .ranks-wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+  }
+  .rank-item {
+    background: rgba(26,37,69,0.4);
+    border: 1px solid rgba(200,168,75,0.1);
+    padding: 12px 16px;
+    display: flex; align-items: center; gap: 12px;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .rank-item:hover { background: rgba(200,168,75,0.08); border-color: rgba(200,168,75,0.3); }
+  .rank-num {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    color: var(--gold);
+    min-width: 26px;
+    font-weight: 700;
+  }
+  .rank-name { font-size: 14px; color: var(--silver); font-weight: 500; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: linear-gradient(0deg, #000 0%, var(--bg) 100%);
+    padding: 80px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  footer::before {
+    content:'';
+    position: absolute;
+    top:0; left:0; right:0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .footer-logo { width: 100px; margin: 0 auto 24px; filter: drop-shadow(0 0 15px rgba(200,168,75,0.3)); }
+  .footer-text {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 19px;
+    color: var(--silver);
+    max-width: 700px;
+    margin: 0 auto 24px;
+    line-height: 1.8;
+  }
+  .footer-sign {
+    font-family: 'Dancing Script', cursive;
+    font-size: 38px;
+    color: var(--gold);
+    text-shadow: 0 0 20px rgba(200,168,75,0.4);
+    margin-top: 16px;
+  }
+  .footer-copy {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: rgba(200,168,75,0.3);
+    margin-top: 40px;
+    text-transform: uppercase;
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── FULL SECTION BG ── */
+  .full-section {
+    background: linear-gradient(180deg, var(--bg) 0%, rgba(10,14,26,0.95) 50%, var(--bg) 100%);
+    padding: 100px 20px;
+  }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+
+  /* ── SEPARATORS ── */
+  .sep {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(200,168,75,0.3), transparent);
+    margin: 0 auto;
+    max-width: 800px;
+  }
+
+  /* animated particles */
+  #particles-canvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* Nav */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 16px 40px;
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(7,9,15,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(200,168,75,0.15);
+    transform: translateY(-100%);
+    transition: transform 0.5s ease;
+  }
+  nav.visible { transform: translateY(0); }
+  .nav-logo { display: flex; align-items: center; gap: 12px; }
+  .nav-logo img { width: 36px; height: 36px; object-fit: contain; filter: drop-shadow(0 0 6px rgba(200,168,75,0.4)); }
+  .nav-logo span {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: var(--silver);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  @media (max-width:700px) {
+    .info-grid { grid-template-columns: 1fr; }
+    .ranks-wrapper { grid-template-columns: repeat(2,1fr); }
+    .nav-links { display: none; }
+    .header-meta { flex-direction: column; gap: 12px; align-items: center; }
+    .info-row { grid-template-columns: 130px 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CANVAS PARTICLES -->
+<canvas id="particles-canvas"></canvas>
+
+<!-- INTRO SCREEN -->
+<div id="intro">
+  <div class="intro-bg-grid"></div>
+  <div class="intro-scanlines"></div>
+  <div class="intro-corner tl"></div>
+  <div class="intro-corner tr"></div>
+  <div class="intro-corner bl"></div>
+  <div class="intro-corner br"></div>
+
+  <div class="intro-ring">
+    <div class="intro-logo-wrap">
+      <img src="lspd-removebg-preview.png" alt="LSPD Logo" onerror="this.style.display='none';this.parentElement.innerHTML='<div style=\'font-size:60px;color:var(--gold)\'>⭐</div>'">
+    </div>
+  </div>
+
+  <div class="intro-title">LOS SANTOS P.D.</div>
+  <div class="intro-sub">Police Department — Chief of Police Application</div>
+
+  <div class="intro-bar"></div>
+  <div class="intro-loading-text" id="loading-txt">INITIALIZING SECURE CONNECTION...</div>
+
+  <button class="intro-enter-btn" onclick="enterSite()" id="enter-btn">
+    ▶ BETRETEN
+  </button>
+</div>
+
+<!-- MAIN NAVIGATION -->
+<nav id="main-nav">
+  <div class="nav-logo">
+    <img src="lspd-removebg-preview.png" alt="LSPD" onerror="this.style.display='none'">
+    <span>LSPD</span>
+  </div>
+  <div class="nav-links">
+    <a href="#info">Profil</a>
+    <a href="#motivation">Motivation</a>
+    <a href="#abteilungen">Abteilungen</a>
+    <a href="#erfahrung">Erfahrung</a>
+    <a href="#raenge">Ränge</a>
+  </div>
+</nav>
+
+<!-- MAIN SITE -->
+<div id="main-site">
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-bg-lines"></div>
+    <div class="header-glow"></div>
+
+    <div class="header-badge">
+      <img src="lspd-removebg-preview.png" alt="LSPD Logo" onerror="this.style.display='none'">
+    </div>
+
+    <div class="header-eyebrow">Offizielle Bewerbung — 2026</div>
+
+    <h1 class="site-title">
+      LOS SANTOS<br><span>POLICE DEPT</span>
+    </h1>
+
+    <div class="header-divider">
+      <span class="star">★</span>
+    </div>
+
+    <div class="header-quote">
+      „Respekt wird nicht gefordert, sondern verdient."
+    </div>
+
+    <div class="header-meta">
+      <div class="meta-pill">Bewerbung zum Chief of Police</div>
+      <div class="meta-pill">Elito Kasalla · 226991</div>
+    </div>
+
+    <div class="scroll-indicator">
+      <span class="scroll-arrow">↓</span>
+      <span>SCROLL</span>
+    </div>
+  </header>
+
+  <!-- INFORMATIONEN -->
+  <div class="full-section" id="info">
+    <div class="section-inner">
+      <div class="section-label reveal">Persönliche Daten</div>
+      <div class="section-title reveal">Informationen</div>
+
+      <div class="info-grid reveal">
+        <div class="info-photo-wrap">
+          <img class="info-photo" src="lspd-removebg-preview.png" alt="Elito Kasalla" onerror="this.outerHTML='<div style=\'width:160px;height:160px;background:var(--mid-blue);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:40px\'>👮</div>'">
+        </div>
+        <div>
+          <div class="info-table">
+            <div class="info-row"><div class="info-key">OOC Name</div><div class="info-val">Yazan</div></div>
+            <div class="info-row"><div class="info-key">Alter</div><div class="info-val">20 Jahre</div></div>
+            <div class="info-row"><div class="info-key">DC Name</div><div class="info-val">Yazan:448</div></div>
+            <div class="info-row"><div class="info-key">IC Name</div><div class="info-val">Elito Kasalla</div></div>
+            <div class="info-row"><div class="info-key">Reisepassnummer</div><div class="info-val">226991</div></div>
+            <div class="info-row"><div class="info-key">Visum Stufe</div><div class="info-val">52</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ITALIC QUOTE -->
+  <div class="italic-quote reveal">
+    Disziplin ist nicht nur Pflicht – sie ist unser Vorteil.
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- MOTIVATION -->
+  <div class="full-section" id="motivation">
+    <div class="section-inner">
+      <div class="section-label reveal">Ziele &amp; Vision</div>
+      <div class="section-title reveal">Warum willst du Leader<br>der Organisation werden?</div>
+
+      <div class="text-block reveal">
+        Die Bewerbung zum Chief of Police motiviert mich, weil ich die Zukunft des LSPD aktiv mitgestalten und auf höchster Ebene Verantwortung übernehmen möchte. Durch meine strukturierte, loyale und belastbare Arbeitsweise bin ich überzeugt, die Anforderungen dieser Position erfüllen zu können. Auch in stressigen oder kritischen Situationen bewahre ich einen kühlen Kopf und treffe Entscheidungen mit Bedacht und im Sinne der Organisation.
+      </div>
+      <div class="text-block reveal">
+        Mein Ziel als Chief of Police ist es, das LSPD weiterzuentwickeln, interne Abläufe zu optimieren und für Stabilität, Professionalität sowie eine starke Zusammenarbeit innerhalb der Führungsebene zu sorgen. Dabei stehen für mich die Interessen des LSPD, ein respektvoller Umgang im Team und die Sicherheit der Bürger stets an erster Stelle.
+      </div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ABTEILUNGSKONZEPT -->
+  <div class="full-section" id="abteilungen">
+    <div class="section-inner">
+      <div class="section-label reveal">Struktur &amp; Organisation</div>
+      <div class="section-title reveal">Abteilungskonzept</div>
+
+      <div class="dept-grid">
+        <div class="dept-card reveal">
+          <div class="dept-card-title">HR — Human Resources</div>
+          <div class="dept-card-body">Die HR ist für die Verwaltung und Betreuung aller Mitarbeiter des LSPD zuständig. Dazu gehören Einstellungen, Entlassungen, Bewerbungsgespräche und weitere personalrelevante Aufgaben.</div>
+        </div>
+        <div class="dept-card reveal">
+          <div class="dept-card-title">PA — Public Affairs</div>
+          <div class="dept-card-body">Die PA übernimmt die Öffentlichkeitsarbeit des LSPD. Sie organisieren Pressemitteilungen und repräsentieren das LSPD bei öffentlichen Veranstaltungen, wie z.B. Events für die Bürger von Los Santos.</div>
+        </div>
+        <div class="dept-card reveal">
+          <div class="dept-card-title">PSB — Professional Standards Bureau</div>
+          <div class="dept-card-body">Die PSB untersucht interne Fehlverhalten innerhalb des LSPD. Dazu gehören Beschwerden gegen Beamte oder Verstöße gegen die Dienstvorschriften.</div>
+        </div>
+        <div class="dept-card reveal">
+          <div class="dept-card-title">S.W.A.T. — Special Weapons and Tactics</div>
+          <div class="dept-card-body">Die S.W.A.T. ist die taktische Spezialeinheit des LSPD und wird bei Hochrisiko-Einsätzen eingesetzt. Hauptsächlich zuständig für Flugzeugträger oder Ghettostreife.</div>
+        </div>
+        <div class="dept-card reveal">
+          <div class="dept-card-title">TF — Task Force</div>
+          <div class="dept-card-body">Die TF ist hauptsächlich für die Beweissicherung zuständig. Sie dokumentieren illegale Aktivitäten und decken illegale Machenschaften auf.</div>
+        </div>
+        <div class="dept-card reveal">
+          <div class="dept-card-title">TD — Training Division</div>
+          <div class="dept-card-body">Die Training Division ist hauptsächlich für die Ausbildung, Schulungen und Weiterbildungen der Mitarbeiter zuständig. Sie sorgt dafür, dass neue sowie bestehende Mitglieder ihr Wissen erweitern und die Standards des LSPD jederzeit eingehalten werden.</div>
+        </div>
+        <div class="dept-card full reveal">
+          <div class="dept-card-title">TOW — Towing &amp; Impound Division</div>
+          <div class="dept-card-body">Die Towing Division ist für das Abschleppen, Sicherstellen und Verwolten von Fahrzeugen zuständig. Sie unterstützen die Beamten bei Verkehrseinsätzen, entfernt verlassene oder falsch abgestellte Fahrzeuge und sorgt für Ordnung sowie einen reibungslosen Ablauf im Straßenverkehr.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ERFAHRUNG -->
+  <div class="full-section" id="erfahrung">
+    <div class="section-inner">
+      <div class="section-label reveal">Werdegang</div>
+      <div class="section-title reveal">Erfahrung</div>
+
+      <div class="exp-block reveal">
+        <div class="exp-title">GOV — Regierung</div>
+        <ul class="exp-list">
+          <li><strong>23. Vize Minister</strong> — Unter der Leitung: Kimjon Kasalla</li>
+          <li><strong>25. Minister of State</strong> — Unter der Leitung: Kenan Kasalla</li>
+          <li><strong>26. Assistent of Bureau</strong> — Unter der Leitung: Paul Nao</li>
+          <li><strong>22. Staatssekretär</strong> — Unter der Leitung: Nico Schlumpf</li>
+        </ul>
+      </div>
+
+      <div class="exp-block reveal">
+        <div class="exp-title">FIB — Federal Investigation Bureau</div>
+        <ul class="exp-list">
+          <li><strong>9. Field Agent</strong> — Unter der Leitung: Mike Mosley</li>
+        </ul>
+      </div>
+
+      <div class="exp-block reveal">
+        <div class="exp-title">LSPD — Los Santos Police Department</div>
+        <ul class="exp-list">
+          <li><strong>24. Lieutenant</strong> — Unter der Leitung: John Bohne</li>
+        </ul>
+      </div>
+
+      <div class="exp-block reveal">
+        <div class="exp-title">Crime — Straßenerfahrung</div>
+        <ul class="exp-list">
+          <li><strong>Leeder</strong> OG Grove Street Gang</li>
+          <li>10er Blood Street Gang</li>
+          <li>10er Marabuma Grande</li>
+          <li>10er The Ballas Gang</li>
+          <li>10er Vagos</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- EIGNUNG -->
+  <div class="full-section">
+    <div class="section-inner">
+      <div class="section-label reveal">Qualifikation</div>
+      <div class="section-title reveal">Was zeichnet dich als Leader aus?</div>
+
+      <div class="text-block reveal">
+        Ich eigne mich für diese Position, weil ich zuverlässig diszipliniert und entscheidungsstark arbeite. Durch meine Erfahrung in den anderen States kenne ich die Abläufe und weiß wie wichtig klare Strukturen und Loyalität sind. Zudem bringe ich ein hohes Maß an Engagement mit und handle stets im Interesse der Orga.
+      </div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- VORSCHLÄGE -->
+  <div class="full-section">
+    <div class="section-inner">
+      <div class="section-label reveal">Verbesserungen &amp; Ideen</div>
+      <div class="section-title reveal">Vorschläge zur Verbesserung<br>des Rollenspiels</div>
+
+      <div class="text-block reveal">
+        Meine Vorschläge zur Verbesserung des Rollenspiels innerhalb der Organisation wären vor allem darauf ausgelegt, das LSPD aktiver, präsenter und abwechslungsreicher zu gestalten.
+      </div>
+      <div class="text-block reveal">
+        Ein wichtiger Punkt wäre die Einführung regelmäßiger offener Bewerbungsphasen, um neuen Bürgern den Einstieg in das LSPD zu erleichtern und gleichzeitig den direkten Kontakt zur Bevölkerung von Los Santos zu stärken. Dadurch könnte man nicht nur neue Mitglieder gewinnen, sondern auch das öffentliche Bild des LSPD verbessern.
+      </div>
+      <div class="text-block reveal">
+        Zusätzlich halte ich gesponserte Events vom LSPD — sowohl eigenständig als auch gemeinsam mit anderen Organisationen — für eine große Bereicherung. Ob interne Trainings, öffentliche Veranstaltungen oder gemeinsame RP-Situationen mit anderen Fraktionen: Solche Events fördern Aktivität, Teamgeist und sorgen für mehr abwechslungsreiches Roleplaying auf dem Server.
+      </div>
+      <div class="text-block reveal">
+        Außerdem sollte der Streifendienst stärker auf aktives und kreatives RP ausgelegt werden, anstatt sich nur auf Standardabläufe zu konzentrieren. Mehr Bürgerkontakt, spontane Situationen und realistische Kontrollen würden das allgemeine Spielerlebnis deutlich verbessern.
+      </div>
+      <div class="text-block reveal">
+        Zudem sollte das LSPD bei Events stärker vertreten sein, um für mehr Interaktion, spannende RP-Situationen und eine lebendigere Atmosphäre auf dem Server zu sorgen. Dadurch kann das Roleplaying zwischen den Organisationen und den Bürgern deutlich gefördert werden.
+      </div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- RANGKONZEPT -->
+  <div class="full-section" id="raenge">
+    <div class="section-inner">
+      <div class="section-label reveal">Hierarchie</div>
+      <div class="section-title reveal">Rangkonzept</div>
+
+      <div class="ranks-wrapper reveal">
+        <!-- Col 1: 30–21 -->
+        <div>
+          <div class="rank-item"><span class="rank-num">30.</span><span class="rank-name">Chief of Police</span></div>
+          <div class="rank-item"><span class="rank-num">29.</span><span class="rank-name">Dep. Chief of Police</span></div>
+          <div class="rank-item"><span class="rank-num">28.</span><span class="rank-name">Ass. Chief of Police</span></div>
+          <div class="rank-item"><span class="rank-num">27.</span><span class="rank-name">Chief of Staff</span></div>
+          <div class="rank-item"><span class="rank-num">26.</span><span class="rank-name">Head of Department</span></div>
+          <div class="rank-item"><span class="rank-num">25.</span><span class="rank-name">Dep. Head of Department</span></div>
+          <div class="rank-item"><span class="rank-num">24.</span><span class="rank-name">Department Assistent</span></div>
+          <div class="rank-item"><span class="rank-num">23.</span><span class="rank-name">Commander</span></div>
+          <div class="rank-item"><span class="rank-num">22.</span><span class="rank-name">Captain</span></div>
+          <div class="rank-item"><span class="rank-num">21.</span><span class="rank-name">Lieutenant</span></div>
+        </div>
+        <!-- Col 2: 20–11 -->
+        <div>
+          <div class="rank-item"><span class="rank-num">20.</span><span class="rank-name">S.W.A.T Captain</span></div>
+          <div class="rank-item"><span class="rank-num">19.</span><span class="rank-name">Supervisory Head Officer</span></div>
+          <div class="rank-item"><span class="rank-num">18.</span><span class="rank-name">Press Officer</span></div>
+          <div class="rank-item"><span class="rank-num">17.</span><span class="rank-name">Senior Inspector</span></div>
+          <div class="rank-item"><span class="rank-num">16.</span><span class="rank-name">Inspector</span></div>
+          <div class="rank-item"><span class="rank-num">15.</span><span class="rank-name">Detective</span></div>
+          <div class="rank-item"><span class="rank-num">14.</span><span class="rank-name">Sergeant</span></div>
+          <div class="rank-item"><span class="rank-num">13.</span><span class="rank-name">Senior Corporal</span></div>
+          <div class="rank-item"><span class="rank-num">12.</span><span class="rank-name">Corporal</span></div>
+          <div class="rank-item"><span class="rank-num">11.</span><span class="rank-name">Special Officer</span></div>
+        </div>
+        <!-- Col 3: 10–01 -->
+        <div>
+          <div class="rank-item"><span class="rank-num">10.</span><span class="rank-name">Supervising Officer</span></div>
+          <div class="rank-item"><span class="rank-num">09.</span><span class="rank-name">Officer First Class</span></div>
+          <div class="rank-item"><span class="rank-num">08.</span><span class="rank-name">Senior Officer</span></div>
+          <div class="rank-item"><span class="rank-num">07.</span><span class="rank-name">Officer II</span></div>
+          <div class="rank-item"><span class="rank-num">06.</span><span class="rank-name">Officer I</span></div>
+          <div class="rank-item"><span class="rank-num">05.</span><span class="rank-name">Officer</span></div>
+          <div class="rank-item"><span class="rank-num">04.</span><span class="rank-name">Rookie</span></div>
+          <div class="rank-item"><span class="rank-num">03.</span><span class="rank-name">Traffic Officer</span></div>
+          <div class="rank-item"><span class="rank-num">02.</span><span class="rank-name">Facility Manager</span></div>
+          <div class="rank-item"><span class="rank-num">01.</span><span class="rank-name">Suspended</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <img class="footer-logo" src="lspd-removebg-preview.png" alt="LSPD" onerror="this.style.display='none'">
+    <div class="footer-text reveal">
+      Vielen Dank für die Möglichkeit, mich vorzustellen.<br>
+      Ich bin bereit Verantwortung zu übernehmen und das LSPD als<br>
+      Chief of Police auf das nächste Level zu bringen.
+    </div>
+    <div class="footer-text reveal" style="font-style:italic;color:var(--gold);font-size:17px;">
+      „Stärke zeigt sich nicht in Worten, sondern in Entscheidungen."
+    </div>
+    <div class="footer-sign reveal">Elito Kasalla</div>
+    <div class="footer-copy">Los Santos Police Department · Bewerbung 2026 · Vertraulich</div>
+  </footer>
+
+</div><!-- /main-site -->
+
+<script>
+// ── PARTICLES ──
+(function(){
+  const canvas = document.getElementById('particles-canvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  function resize(){ canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  window.addEventListener('resize', resize); resize();
+  for(let i=0;i<80;i++){
+    particles.push({
+      x: Math.random()*window.innerWidth,
+      y: Math.random()*window.innerHeight,
+      r: Math.random()*1.5+0.3,
+      dx: (Math.random()-.5)*0.3,
+      dy: -Math.random()*0.4-0.1,
+      opacity: Math.random()*0.5+0.1
+    });
+  }
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p=>{
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle = `rgba(200,168,75,${p.opacity})`;
+      ctx.fill();
+      p.x += p.dx; p.y += p.dy;
+      if(p.y < -5){ p.y = canvas.height+5; p.x = Math.random()*canvas.width; }
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── LOADING TEXT CYCLE ──
+const loadingPhrases = [
+  'INITIALIZING SECURE CONNECTION...',
+  'AUTHENTICATING BADGE ID...',
+  'ACCESSING PERSONNEL DATABASE...',
+  'LOADING CLEARANCE LEVEL...',
+  'CONNECTION ESTABLISHED.'
+];
+let lIdx = 0;
+const ltxt = document.getElementById('loading-txt');
+const ltimer = setInterval(()=>{
+  lIdx++;
+  if(ltxt && lIdx < loadingPhrases.length){ ltxt.textContent = loadingPhrases[lIdx]; }
+  else { clearInterval(ltimer); }
+}, 700);
+
+// ── INTRO ENTER ──
+function enterSite(){
+  const intro = document.getElementById('intro');
+  const main  = document.getElementById('main-site');
+  const nav   = document.getElementById('main-nav');
+  intro.classList.add('hidden');
+  setTimeout(()=>{ main.classList.add('visible'); nav.classList.add('visible'); },800);
+}
+
+// Also auto-dismiss after 6s if user doesn't click
+setTimeout(()=>{
+  const btn = document.getElementById('enter-btn');
+  if(btn) btn.style.animation = 'barAppear 0s forwards';
+}, 4200);
+
+// ── NAV SHOW ON SCROLL ──
+const nav = document.getElementById('main-nav');
+window.addEventListener('scroll',()=>{
+  if(window.scrollY > 200) nav.classList.add('visible');
+});
+
+// ── SCROLL REVEAL ──
+const revealEls = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){ e.target.classList.add('visible'); }
+  });
+},{threshold:0.15});
+revealEls.forEach(el=>observer.observe(el));
+</script>
+</body>
+</html>
